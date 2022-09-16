@@ -5,3 +5,6 @@
 	path = vendor/imgui
 	url = git@github.com:Allanzinh0/imgui.git
 	branch = docking
+[submodule "vendor/glm"]
+	path = vendor/glm
+	url = git@github.com:g-truc/glm.git

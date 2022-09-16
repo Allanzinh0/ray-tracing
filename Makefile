@@ -1,10 +1,10 @@
 CPPFLAGS=-std=c++20 -Wall -O3 -g
-LDFLAGS=-Wall -O3 -g
+LDFLAGS=-Wall -Wextra -g3 -m64
 
 SOURCES=$(wildcard src/*.cpp src/**/*.cpp)
 HEADERS=$(wildcard src/*.h src/**/*.h)
 OBJECTS=obj/imgui_impl_opengl3.o obj/imgui_impl_glfw.o $(patsubst src/%.cpp,obj/%.o,$(SOURCES))
-INCLUDE_DIRS=vendor/imgui vendor/imgui/backends vendor/glfw/include vendor/glad
+INCLUDE_DIRS=vendor/imgui vendor/imgui/backends vendor/glfw/include vendor/glad vendor/glm
 LIBS=imgui glfw3 glad
 
 all: dist/dev.out
@@ -16,7 +16,7 @@ dist/dev.out: $(OBJECTS) $(patsubst %,lib/lib%.a,$(LIBS))
 
 obj/%.o: src/%.cpp $(HEADERS) $(INCLUDE_DIRS)
 	@mkdir -p $(@D)
-	g++ $(CPPFLAGS) $(patsubst %,-I%,$(INCLUDE_DIRS)) -c $< -o $@ $(HEADERS)
+	g++ $(CPPFLAGS) $(patsubst %,-I%,$(INCLUDE_DIRS)) -c $< -o $@
 
 lib/libglfw3.a:
 	@mkdir -p $(@D)
@@ -35,13 +35,13 @@ lib/libimgui.a:
 	@make -C vendor/imgui
 	cp vendor/imgui/libimgui.a $@
 
-obj/imgui_impl_opengl3.o: vendor/imgui/backends/imgui_impl_opengl3.cpp $(INCLUDE_DIRS)
+obj/imgui_impl_opengl3.o: vendor/imgui/backends/imgui_impl_opengl3.cpp
 	@mkdir -p $(@D)
-	g++ $(CPPFLAGS) $(patsubst %,-I%,$(INCLUDE_DIRS)) -c $< -o $@ $(HEADERS)
+	g++ $(CPPFLAGS) $(patsubst %,-I%,$(INCLUDE_DIRS)) -c $< -o $@
 
-obj/imgui_impl_glfw.o: vendor/imgui/backends/imgui_impl_glfw.cpp $(INCLUDE_DIRS)
+obj/imgui_impl_glfw.o: vendor/imgui/backends/imgui_impl_glfw.cpp
 	@mkdir -p $(@D)
-	g++ $(CPPFLAGS) $(patsubst %,-I%,$(INCLUDE_DIRS)) -c $< -o $@ $(HEADERS)
+	g++ $(CPPFLAGS) $(patsubst %,-I%,$(INCLUDE_DIRS)) -c $< -o $@
 
 clean:
 	@rm -rf dist obj lib
