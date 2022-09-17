@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Timer.h"
+#include "../Timer.h"
 
 void Screen::OnUIRender()
 {
@@ -27,6 +27,7 @@ void Screen::OnUIRender()
     m_ViewportWidth = ImGui::GetContentRegionAvail().x;
     m_ViewportHeight = ImGui::GetContentRegionAvail().y;
 
+
     if (m_Renderer.GetFinalImage())
         ImGui::Image(
             (uint32_t*)m_Renderer.GetFinalImage()->GetRendererID(),
@@ -40,9 +41,12 @@ void Screen::Render()
 {
     Timer timer;
 
-    m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
-    m_Camera.OnResize(m_ViewportWidth, m_ViewportHeight);
-    m_Renderer.Render(m_Camera);
+    if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+    {
+        m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
+        m_Camera.OnResize(m_ViewportWidth, m_ViewportHeight);
+        m_Renderer.Render(m_Camera);
+    }
     
     m_LastRenderTime = timer.ElapsedMillis();
 }

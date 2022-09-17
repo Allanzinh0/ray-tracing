@@ -3,9 +3,9 @@
 #include <memory>
 #include <stdint.h>
 
-#include "Image.h"
-#include "Renderer.h"
-#include "Camera.h"
+#include "../Image.h"
+#include "../Renderer.h"
+#include "../Camera.h"
 
 class Screen
 {
