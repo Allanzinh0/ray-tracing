@@ -1,6 +1,8 @@
 #include "Screen.h"
 
-#include "imgui.h"
+#include <imgui.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Timer.h"
 
@@ -8,8 +10,14 @@ void Screen::OnUIRender()
 {
     Render();
     ImGui::Begin("Settings");
+    
+    glm::vec3 dPosition = m_Camera.GetPosition();
+    ImGui::SliderFloat3("Cam Position", glm::value_ptr(dPosition), -10.0f, 10.0f);
+    m_Camera.SetPosition(dPosition);
+
+    if (ImGui::Button("Render"))
+        Render();
     ImGui::Text("Last render: %.3fms", m_LastRenderTime);
-    if (ImGui::Button("Render")) Render();
     ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -33,7 +41,8 @@ void Screen::Render()
     Timer timer;
 
     m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
-    m_Renderer.Render();
+    m_Camera.OnResize(m_ViewportWidth, m_ViewportHeight);
+    m_Renderer.Render(m_Camera);
     
     m_LastRenderTime = timer.ElapsedMillis();
 }
