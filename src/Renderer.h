@@ -18,10 +18,10 @@ public:
 
     std::shared_ptr<Image> GetFinalImage() const { return m_FinalImage; }
 private:
-    uint32_t PerPixel(glm::vec2 coord);
+    glm::vec4 PerPixel(glm::vec2 coord);
 
 private:
     std::shared_ptr<Image> m_FinalImage;
-    uint32_t m_Width, m_Height;
+    float m_AspectRatio;
     uint32_t* m_ImageData = nullptr;
 };
