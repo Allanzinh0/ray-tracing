@@ -5,18 +5,13 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../Timer.h"
+#include "Application.h"
 
 void Screen::OnUIRender()
 {
+    m_Camera.OnUpdate(Application::Get().GetDeltaTime());
     Render();
     ImGui::Begin("Settings");
-    
-    glm::vec3 dPosition = m_Camera.GetPosition();
-    ImGui::SliderFloat3("Cam Position", glm::value_ptr(dPosition), -10.0f, 10.0f);
-    m_Camera.SetPosition(dPosition);
-
-    if (ImGui::Button("Render"))
-        Render();
     ImGui::Text("Last render: %.3fms", m_LastRenderTime);
     ImGui::End();
 

@@ -4,6 +4,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include "Input/Input.h"
+
 Camera::Camera(float verticalFOV, float nearClip, float farClip)
 	: m_VerticalFOV(verticalFOV), m_NearClip(nearClip), m_FarClip(farClip)
 {
@@ -13,7 +15,6 @@ Camera::Camera(float verticalFOV, float nearClip, float farClip)
 
 void Camera::OnUpdate(float ts)
 {
-#if 0
 	glm::vec2 mousePos = Input::GetMousePosition();
 	glm::vec2 delta = (mousePos - m_LastMousePosition) * 0.002f;
 	m_LastMousePosition = mousePos;
@@ -66,6 +67,7 @@ void Camera::OnUpdate(float ts)
 	}
 
 	// Rotation
+	/*
 	if (delta.x != 0.0f || delta.y != 0.0f)
 	{
 		float pitchDelta = delta.y * GetRotationSpeed();
@@ -77,7 +79,13 @@ void Camera::OnUpdate(float ts)
 
 		moved = true;
 	}
-#endif
+	*/
+
+	if (moved)
+	{
+		RecalculateView();
+    	RecalculateRayDirections();
+	}
 }
 
 void Camera::OnResize(uint32_t width, uint32_t height)
@@ -125,15 +133,4 @@ void Camera::RecalculateRayDirections()
 			m_RayDirections[x + y * m_ViewportWidth] = rayDirection;
 		}
 	}
-}
-
-void Camera::SetPosition(const glm::vec3& pos)
-{
-	if (m_Position == pos)
-		return;
-
-    m_Position = pos;
-
-    RecalculateView();
-    RecalculateRayDirections();
 }

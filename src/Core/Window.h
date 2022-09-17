@@ -14,6 +14,8 @@ public:
 
     void BeginFrame();
     void Swap();
+    
+    double GetTime() { return glfwGetTime(); }
 
     GLFWwindow* GetWindowHandle() const { return m_WindowHandle; }
     bool WindowRunning() const { return glfwWindowShouldClose(m_WindowHandle); }

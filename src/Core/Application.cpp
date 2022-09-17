@@ -22,6 +22,10 @@ void Application::Run()
 {
     while (!m_Window.WindowRunning())
     {
+        m_Time = m_Window.GetTime();
+        m_DeltaTime = m_Time - m_LastTime;
+        m_LastTime = m_Time;
+
         m_Window.BeginFrame();
         m_ImGuiLayer.BeginFrame();
 
