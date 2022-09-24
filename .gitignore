@@ -27,8 +27,22 @@
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
 
 imgui.ini
+.vs
+.vscode
+
+bin/**
+bin-int/**
+
+**/bin/**
+**/bin-int/**
+
+*.sln
+*.vcxproj
+*.vcxproj*
+
+*.exp
+*.pdb

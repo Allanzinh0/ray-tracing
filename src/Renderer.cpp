@@ -47,10 +47,9 @@ glm::vec4 Renderer::TraceRay(const Scene& scene, const Ray& ray)
     if (scene.Spheres.size() == 0)
         return glm::vec4(0.2f,0.2f,0.2f,1.0f);
 
-    Sphere* closestSphere = nullptr;
     float hitDistance = std::numeric_limits<float>::max();
-
-    for (Sphere sphere : scene.Spheres)
+    const Sphere* closestSphere = nullptr;
+    for (const Sphere& sphere : scene.Spheres)
     {
         glm::vec3 origin = ray.Origin - sphere.Position;
 
