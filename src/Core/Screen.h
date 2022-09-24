@@ -6,11 +6,12 @@
 #include "../Image.h"
 #include "../Renderer.h"
 #include "../Camera.h"
+#include "../Scene.h"
 
 class Screen
 {
 public:
-    Screen() : m_Camera(60.0f, 0.1f, 100.0f) {}
+    Screen();
     ~Screen() = default;
 
     void OnUIRender();
@@ -22,4 +23,5 @@ private:
     uint32_t m_ViewportHeight = 0;
     float m_LastRenderTime = 0.0f;
     Camera m_Camera;
+    Scene m_Scene;
 };

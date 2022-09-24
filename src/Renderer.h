@@ -8,6 +8,7 @@
 #include "Image.h"
 #include "Camera.h"
 #include "Ray.h"
+#include "Scene.h"
 
 class Renderer
 {
@@ -15,12 +16,12 @@ public:
     Renderer() = default;
     ~Renderer() = default;
 
-    void Render(const Camera& cam);
+    void Render(const Scene& scene, const Camera& cam);
     void OnResize(uint32_t width, uint32_t height);
 
     std::shared_ptr<Image> GetFinalImage() const { return m_FinalImage; }
 private:
-    glm::vec4 TraceRay(const Ray& ray);
+    glm::vec4 TraceRay(const Scene& scene, const Ray& ray);
 
 private:
     std::shared_ptr<Image> m_FinalImage;
