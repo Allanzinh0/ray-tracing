@@ -33,18 +33,24 @@ void Screen::OnUIRender()
     ImGui::Begin("Settings");
     ImGui::Text("Last render: %.3fms", m_LastRenderTime);
     ImGui::End();
-
     
     ImGui::Begin("Scene");
+    if (ImGui::Button("Add Sphere +"))
+        m_Scene.Spheres.push_back(Sphere());
+
     for (size_t i = 0; i < m_Scene.Spheres.size(); i++)
     {
         ImGui::PushID(i);
 
         Sphere& sphere = m_Scene.Spheres[i];
-        ImGui::DragFloat3("Position", glm::value_ptr(sphere.Position), 0.1f);
-        ImGui::DragFloat("Radius", &sphere.Radius, 0.1f);
-        ImGui::ColorEdit3("Albedo", glm::value_ptr(sphere.Albedo), 0.1f);
-        ImGui::Separator();
+        if (ImGui::TreeNode("Sphere"))
+        {
+            ImGui::DragFloat3("Position", glm::value_ptr(sphere.Position), 0.1f);
+            ImGui::DragFloat("Radius", &sphere.Radius, 0.1f);
+            ImGui::ColorEdit3("Albedo", glm::value_ptr(sphere.Albedo), 0.1f);
+            ImGui::TreePop();
+            ImGui::Separator();
+        }
 
         ImGui::PopID();
     }
