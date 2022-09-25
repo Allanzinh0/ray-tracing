@@ -43,12 +43,9 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
 glm::vec4 Renderer::TraceRay(const Scene& scene, const Ray& ray)
 {
-
-    if (scene.Spheres.size() == 0)
-        return glm::vec4(0.2f,0.2f,0.2f,1.0f);
-
     float hitDistance = std::numeric_limits<float>::max();
     const Sphere* closestSphere = nullptr;
+
     for (const Sphere& sphere : scene.Spheres)
     {
         glm::vec3 origin = ray.Origin - sphere.Position;
@@ -72,7 +69,11 @@ glm::vec4 Renderer::TraceRay(const Scene& scene, const Ray& ray)
     }
 
     if (closestSphere == nullptr)
-        return glm::vec4(0.2f,0.2f,0.2f,1.0f);
+    {
+        float t = 0.5f * (glm::normalize(ray.Direction).y + 1);
+        glm::vec3 skyColor = (1 - t) * glm::vec3(1.0f) + t * glm::vec3(0.5f, 0.7f, 1.0f);
+        return glm::vec4(skyColor,1.0f);
+    }
 
     glm::vec3 origin = ray.Origin - closestSphere->Position;
     glm::vec3 hitPoint = origin + ray.Direction * hitDistance;
