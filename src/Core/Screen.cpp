@@ -12,15 +12,15 @@ Screen::Screen()
 {
     {
         Sphere sphere;
-        sphere.Position = { -1.0f, 0.0f, -5.0f };
+        sphere.Position = { 0.0f, 0.0f, -5.0f };
         sphere.Radius = 0.5f;
         sphere.Albedo = { 1.0f, 0.0f, 1.0f };
         m_Scene.Spheres.push_back(sphere);
     }
     {
         Sphere sphere;
-        sphere.Position = { 1.0f, 0.0f, -5.0f };
-        sphere.Radius = 0.5f;
+        sphere.Position = { 0.0f, -100.5f, -5.0f };
+        sphere.Radius = 100.0f;
         sphere.Albedo = { 0.0f, 1.0f, 1.0f };
         m_Scene.Spheres.push_back(sphere);
     }
@@ -31,6 +31,7 @@ void Screen::OnUIRender()
     m_Camera.OnUpdate(Application::Get().GetDeltaTime());
     Render();
     ImGui::Begin("Settings");
+    ImGui::DragInt("Bounces", &m_Renderer.Bounces, 1, 1, 500);
     ImGui::Text("Last render: %.3fms", m_LastRenderTime);
     ImGui::End();
     
