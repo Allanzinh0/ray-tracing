@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Random.h"
 
 namespace Utils
 {
@@ -59,7 +60,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
 
         if (payload.HitDistance < 0.0f)
         {
-            glm::vec3 skyColor = glm::vec3(0.2f);
+            glm::vec3 skyColor = glm::vec3(0.6f, 0.7f, 0.9f);
 
             color += skyColor * multiplier;
             break;
@@ -69,7 +70,8 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
         float d = glm::max(glm::dot(payload.WorldNormal, -lightDir), 0.0f); // cos(angle)
 
         const Sphere& sphere = m_ActiveScene->Spheres[payload.ObjectIndex];
-        glm::vec3 sphereColor = sphere.Albedo;
+        const Material& material = m_ActiveScene->Materials[sphere.MaterialIndex];
+        glm::vec3 sphereColor = material.Albedo;
         sphereColor *= d;
 
         color += sphereColor * multiplier;
@@ -77,7 +79,7 @@ glm::vec4 Renderer::PerPixel(uint32_t x, uint32_t y)
         multiplier *= 0.7f;
 
         ray.Origin = payload.WorldPosition + payload.WorldNormal * 0.0001f;
-        ray.Direction = glm::reflect(ray.Direction, payload.WorldNormal);
+        ray.Direction = glm::reflect(ray.Direction, payload.WorldNormal + material.Roughness * Random::Vec3(-0.5f, 0.5f));
     }
 
 
