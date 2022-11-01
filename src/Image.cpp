@@ -18,6 +18,7 @@ Image::Image(uint32_t width, uint32_t height, void* data)
 
 Image::~Image()
 {
+    glDeleteTextures(1, &m_RendererID);
 }
 
 void Image::SetData(void* data)
