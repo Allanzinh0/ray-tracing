@@ -36,11 +36,22 @@ Screen::Screen()
 
 void Screen::OnUIRender()
 {
-    m_Camera.OnUpdate(Application::Get().GetDeltaTime());
+    if (m_Camera.OnUpdate(Application::Get().GetDeltaTime()))
+        m_Renderer.ResetFrameIndex();
+
     Render();
     ImGui::Begin("Settings");
-    ImGui::DragInt("Bounces", &m_Renderer.Bounces, 1, 1, 500);
+    Renderer::Settings& settings = m_Renderer.GetSettings();
     ImGui::Text("Last render: %.3fms", m_LastRenderTime);
+    if (ImGui::Button("Render"))
+        Render();
+
+    ImGui::Checkbox("Accumulate", &settings.Accumulate);
+    ImGui::DragInt("Bounces", &settings.Bounces, 1, 1, 500);
+
+    if (ImGui::Button("Reset"))
+        m_Renderer.ResetFrameIndex();
+
     ImGui::End();
 
     ImGui::Begin("Spheres");

@@ -13,6 +13,12 @@
 class Renderer
 {
 public:
+    struct Settings
+    {
+        bool Accumulate = true;
+        int Bounces = 5;
+    };
+public:
     Renderer() = default;
     ~Renderer() = default;
 
@@ -20,8 +26,9 @@ public:
     void OnResize(uint32_t width, uint32_t height);
 
     std::shared_ptr<Image> GetFinalImage() const { return m_FinalImage; }
-public:
-    int Bounces = 2;
+
+    void ResetFrameIndex() { m_FrameIndex = 1; }
+    Settings& GetSettings() { return m_Settings; }
 private:
     struct HitPayload
     {
@@ -41,9 +48,13 @@ private:
 
 private:
     std::shared_ptr<Image> m_FinalImage;
+    Settings m_Settings;
 
     const Scene* m_ActiveScene = nullptr;
     const Camera* m_ActiveCamera = nullptr;
 
     uint32_t* m_ImageData = nullptr;
+    glm::vec4* m_AccumulationData = nullptr;
+
+    uint32_t m_FrameIndex = 1;
 };
