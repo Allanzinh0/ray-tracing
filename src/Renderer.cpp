@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include "Random.h"
 
+#include <execution>
+
 namespace Utils
 {
     static uint32_t ConvertToRGBA(glm::vec4 color)
@@ -22,20 +24,22 @@ void Renderer::Render(const Scene& scene, const Camera& cam)
     if (m_FrameIndex == 1)
         memset(m_AccumulationData, 0, m_FinalImage->GetWidth() * m_FinalImage->GetHeight() * sizeof(glm::vec4));
 
-    for (uint32_t y = 0; y < m_FinalImage->GetHeight(); y++)
-    {
-        for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
+    std::for_each(std::execution::par_unseq, m_ImageVerticalIter.begin(), m_ImageVerticalIter.end(),
+        [this](uint32_t y)
         {
-            glm::vec4 color = PerPixel(x, y);
-            m_AccumulationData[y * m_FinalImage->GetWidth() + x] += color;
+            for (uint32_t x = 0; x < m_FinalImage->GetWidth(); x++)
+            {
+                glm::vec4 color = PerPixel(x, y);
+                m_AccumulationData[y * m_FinalImage->GetWidth() + x] += color;
 
-            glm::vec4 accumulatedColor = m_AccumulationData[y * m_FinalImage->GetWidth() + x];
-            accumulatedColor /= (float)m_FrameIndex;
+                glm::vec4 accumulatedColor = m_AccumulationData[y * m_FinalImage->GetWidth() + x];
+                accumulatedColor /= (float)m_FrameIndex;
 
-            accumulatedColor = glm::clamp(accumulatedColor, glm::vec4(0.0f), glm::vec4(1.0f));
-            m_ImageData[y * m_FinalImage->GetWidth() + x] = Utils::ConvertToRGBA(accumulatedColor);
+                accumulatedColor = glm::clamp(accumulatedColor, glm::vec4(0.0f), glm::vec4(1.0f));
+                m_ImageData[y * m_FinalImage->GetWidth() + x] = Utils::ConvertToRGBA(accumulatedColor);
+            }
         }
-    }
+    );
 
     m_FinalImage->SetData(m_ImageData);
 
@@ -56,6 +60,13 @@ void Renderer::OnResize(uint32_t width, uint32_t height)
 
         delete[] m_AccumulationData;
         m_AccumulationData = new glm::vec4[width * height];
+
+        m_ImageVerticalIter.resize(height);
+
+        for (uint32_t i = 0; i < height; i++)
+            m_ImageVerticalIter[i] = i;
+
+        m_FrameIndex = 1;
     }
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include <stdint.h>
 
 #include "glm/glm.hpp"
@@ -47,6 +48,7 @@ private:
     HitPayload Miss(const Ray& ray);
 
 private:
+    std::vector<uint32_t> m_ImageVerticalIter;
     std::shared_ptr<Image> m_FinalImage;
     Settings m_Settings;
 
